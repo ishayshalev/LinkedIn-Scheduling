@@ -18,7 +18,9 @@ export interface FeedPost {
   author: {
     name: string;
     headline: string;
-    avatar: string | null;
+    avatar: string;
+    isVerified?: boolean;
+    connectionDegree?: string;
   };
   content: string;
   imageUrl?: string;
@@ -28,6 +30,11 @@ export interface FeedPost {
     comments: number;
     reposts: number;
   };
+  celebratedBy?: string;
+  isPromoted?: boolean;
+  promotedBy?: string;
+  showTranslation?: boolean;
+  actionButton?: 'connect' | 'follow';
 }
 
 // Get today's date and create dates relative to it
@@ -126,46 +133,62 @@ export const feedPosts: FeedPost[] = [
   {
     id: "feed-1",
     author: {
-      name: "Sarah Chen",
-      headline: "Product Design Lead at Stripe | Ex-Google",
-      avatar: null,
+      name: "Ofer Monar, Ph.D.",
+      headline: "Founder and head lecturer at Uxer - UX Studies and consultancy",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+      isVerified: true,
+      connectionDegree: "2nd",
     },
-    content: "Just shipped a major redesign of our checkout flow.\n\n3 months of research, testing, and iteration.\n\nResult: 23% increase in conversion rate.\n\nThe key insight? Reducing cognitive load at each step matters more than visual polish.\n\nDon't make users think.",
-    timeAgo: "2h",
-    engagement: { likes: 234, comments: 45, reposts: 12 },
+    content: "יש לכם חברה ואתם צריכים מתמחים למחקר ועיצוב UI/UX?\nמעולה! יש לנו כאלה!!\nבמסגרת ההתמחות באפיון חוויית משתמש תחת תואר ראשון בפסיכולוגיה באקדמית ת״א יפו,\nפתחנו את ההרשמה להברות הרוצות להשתתף בתכנית ההתמחות UX ל-2026 (מרץ עד יוני).",
+    timeAgo: "29m",
+    engagement: { likes: 48, comments: 12, reposts: 3 },
+    celebratedBy: "Guy Magen",
+    showTranslation: true,
+    actionButton: "connect",
   },
   {
     id: "feed-2",
     author: {
-      name: "Marcus Johnson",
-      headline: "Founder & CEO at TechStart | Building the future of work",
-      avatar: null,
+      name: "Boaz Rossano",
+      headline: "UX Expert for Explainable AI | Helping Startup Companies Gain ...",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+      isVerified: true,
+      connectionDegree: "2nd",
     },
-    content: "Hot take: Remote work isn't going away.\n\nCompanies forcing RTO are just delaying the inevitable.\n\nThe best talent wants flexibility. Period.\n\nAdapt or lose your best people to companies that will.",
-    imageUrl: "placeholder",
-    timeAgo: "4h",
-    engagement: { likes: 1234, comments: 287, reposts: 89 },
+    content: "יש לכם חברה ואתם צריכים מתמחים למחקר ועיצוב UI/UX?\nמעולה! יש לנו כאלה!!",
+    imageUrl: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&h=600&fit=crop",
+    timeAgo: "5d • Edited",
+    engagement: { likes: 234, comments: 45, reposts: 12 },
+    showTranslation: true,
+    actionButton: "connect",
   },
   {
     id: "feed-3",
     author: {
-      name: "Emily Rodriguez",
-      headline: "Senior Engineer at Netflix | React enthusiast",
-      avatar: null,
+      name: "Adeo Ressi",
+      headline: "CEO at Decile Group, Chairman at Founder Institute, Funding...",
+      avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=face",
+      isVerified: true,
+      connectionDegree: "2nd",
     },
-    content: "I've been coding for 10 years and I still Google basic things.\n\nImposter syndrome never fully goes away.\n\nBut here's what I've learned: Everyone is figuring it out as they go.\n\nThe difference between juniors and seniors? Seniors are better at searching.",
-    timeAgo: "6h",
-    engagement: { likes: 567, comments: 89, reposts: 34 },
+    content: "The last satisfying GP just retired.",
+    timeAgo: "1d",
+    engagement: { likes: 36, comments: 24, reposts: 1 },
+    isPromoted: true,
+    promotedBy: "Decile Group",
+    actionButton: "follow",
   },
   {
     id: "feed-4",
     author: {
-      name: "David Park",
-      headline: "Design Systems at Figma | Previously Airbnb",
-      avatar: null,
+      name: "Amir Shneider",
+      headline: "CMO | Skywatch, VOOM & Toffu AI",
+      avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face",
+      isVerified: true,
+      connectionDegree: "1st",
     },
-    content: "Design tokens are the foundation of scalable design systems.\n\nBut most teams implement them wrong.\n\nHere's the framework I use:\n\n1. Primitive tokens (raw values)\n2. Semantic tokens (purpose-driven)\n3. Component tokens (context-specific)\n\nThis hierarchy makes maintenance 10x easier.",
-    timeAgo: "8h",
+    content: "Design tokens are the foundation of scalable design systems.\n\nBut most teams implement them wrong.\n\nHere's the framework I use:\n\n1. Primitive tokens (raw values)\n2. Semantic tokens (purpose-driven)\n3. Component tokens (context-specific)",
+    timeAgo: "4h • Edited",
     engagement: { likes: 345, comments: 56, reposts: 23 },
   },
 ];

@@ -11,7 +11,7 @@ import {
   type DragOverEvent,
 } from '@dnd-kit/core';
 import { useState } from 'react';
-import { groupPostsByDate, getDateKey } from '@/lib/time-utils';
+import { groupPostsByDate } from '@/lib/time-utils';
 import { usePosts } from '@/hooks/usePosts';
 import { DayGroup } from './DayGroup';
 import { PostCard } from './PostCard';
@@ -35,9 +35,10 @@ export function PostList({ posts }: PostListProps) {
     useSensor(KeyboardSensor)
   );
 
-  const groupedPosts = groupPostsByDate(
-    posts.filter((p) => p.scheduledFor)
+  const postsWithSchedule = posts.filter(
+    (p): p is Post & { scheduledFor: string } => p.scheduledFor !== null
   );
+  const groupedPosts = groupPostsByDate(postsWithSchedule);
 
   // Sort groups by date
   const sortedGroups = Array.from(groupedPosts.entries()).sort(

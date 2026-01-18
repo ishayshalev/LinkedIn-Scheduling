@@ -127,11 +127,6 @@ export function PostsProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const selectedPost =
-    [...scheduledPosts, ...drafts, ...postedPosts].find(
-      (p) => p.id === selectedPostId
-    ) || null;
-
   return (
     <PostsContext.Provider
       value={{

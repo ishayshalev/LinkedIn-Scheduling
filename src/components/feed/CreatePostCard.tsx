@@ -1,45 +1,41 @@
-import { Image, Video, Calendar, FileText } from 'lucide-react';
+import { Video, Image, FileText } from 'lucide-react';
 import { user } from '@/data/user';
 
 export function CreatePostCard() {
   return (
-    <div className="bg-white rounded-lg shadow-linkedin-card p-3">
+    <div style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0', padding: '16px' }}>
       {/* Top row - Avatar and Input */}
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-linkedin-blue flex items-center justify-center flex-shrink-0">
-          <span className="text-white text-lg font-semibold">
-            {user.name.charAt(0)}
-          </span>
-        </div>
-        <button className="flex-1 h-12 px-4 text-left border border-linkedin-border rounded-full text-linkedin-text-secondary hover:bg-gray-100 transition-colors">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <img
+          src={user.avatar}
+          alt={user.name}
+          style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+        />
+        <button style={{ flex: 1, height: '48px', padding: '0 16px', textAlign: 'left', border: '1px solid rgba(0,0,0,0.3)', borderRadius: '24px', fontSize: '14px', color: 'rgba(0,0,0,0.6)', backgroundColor: 'transparent', cursor: 'pointer', fontWeight: 500 }}>
           Start a post
         </button>
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center justify-around mt-2 -mx-1">
-        <button className="flex items-center gap-2 px-3 py-3 rounded-md hover:bg-gray-100 transition-colors">
-          <Image className="w-6 h-6 text-linkedin-blue" />
-          <span className="text-sm font-semibold text-linkedin-text-secondary">
-            Photo
-          </span>
-        </button>
-        <button className="flex items-center gap-2 px-3 py-3 rounded-md hover:bg-gray-100 transition-colors">
-          <Video className="w-6 h-6 text-linkedin-green" />
-          <span className="text-sm font-semibold text-linkedin-text-secondary">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
+        <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', borderRadius: '4px', flex: 1, justifyContent: 'center', border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }}>
+          <div style={{ width: '24px', height: '24px', backgroundColor: '#e7a33e', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Video style={{ width: '16px', height: '16px', color: 'white' }} fill="white" strokeWidth={0} />
+          </div>
+          <span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(0,0,0,0.6)' }}>
             Video
           </span>
         </button>
-        <button className="flex items-center gap-2 px-3 py-3 rounded-md hover:bg-gray-100 transition-colors">
-          <Calendar className="w-6 h-6 text-amber-600" />
-          <span className="text-sm font-semibold text-linkedin-text-secondary">
-            Event
+        <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', borderRadius: '4px', flex: 1, justifyContent: 'center', border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }}>
+          <Image style={{ width: '24px', height: '24px', color: '#378fe9' }} />
+          <span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(0,0,0,0.6)' }}>
+            Photo
           </span>
         </button>
-        <button className="flex items-center gap-2 px-3 py-3 rounded-md hover:bg-gray-100 transition-colors">
-          <FileText className="w-6 h-6 text-rose-500" />
-          <span className="text-sm font-semibold text-linkedin-text-secondary">
-            Article
+        <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '12px', borderRadius: '4px', flex: 1, justifyContent: 'center', border: 'none', backgroundColor: 'transparent', cursor: 'pointer' }}>
+          <FileText style={{ width: '24px', height: '24px', color: '#e06847' }} />
+          <span style={{ fontSize: '14px', fontWeight: 600, color: 'rgba(0,0,0,0.6)' }}>
+            Write article
           </span>
         </button>
       </div>

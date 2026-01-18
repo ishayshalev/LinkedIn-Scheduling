@@ -4,8 +4,8 @@ import { FeedContainer } from '@/components/feed/FeedContainer';
 
 export function FeedPage() {
   return (
-    <div className="max-w-[1128px] mx-auto px-4 py-6">
-      <div className="flex gap-6 justify-center">
+    <div style={{ maxWidth: '1128px', margin: '0 auto', padding: '24px 16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', gap: '24px' }}>
         <LeftSidebar />
         <FeedContainer />
         <RightSidebar />
