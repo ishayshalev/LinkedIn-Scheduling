@@ -1,7 +1,7 @@
 import { type Post } from '@/data/posts';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
 import { formatTime } from '@/lib/time-utils';
-import { Image } from 'lucide-react';
+import { Image, ArrowRightLeft } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -10,6 +10,7 @@ interface PostListItemProps {
   isSelected: boolean;
   showDragHandle?: boolean;
   showTime?: boolean;
+  isOver?: boolean;
 }
 
 export function PostListItem({
@@ -17,6 +18,7 @@ export function PostListItem({
   isSelected,
   showDragHandle = true,
   showTime = true,
+  isOver = false,
 }: PostListItemProps) {
   const { setCurrentPostId } = useSchedulingDialog();
 
@@ -27,19 +29,29 @@ export function PostListItem({
     transform,
     transition,
     isDragging,
+    isOver: isSortableOver,
   } = useSortable({
     id: post.id,
     disabled: !showDragHandle,
   });
 
-  const style = {
+  // Use either the prop isOver or the sortable isOver
+  const showSwapOverlay = (isOver || isSortableOver) && !isDragging;
+
+  const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    touchAction: 'none',
+    userSelect: 'none',
+    WebkitUserSelect: 'none',
   };
 
   const handleClick = () => {
-    setCurrentPostId(post.id);
+    // Only handle click if not dragging
+    if (!isDragging) {
+      setCurrentPostId(post.id);
+    }
   };
 
   const contentPreview = post.content.length > 80
@@ -53,22 +65,57 @@ export function PostListItem({
         ...style,
         position: 'relative',
         padding: '12px',
-        backgroundColor: isSelected ? '#e8f4fd' : '#ffffff',
+        backgroundColor: showSwapOverlay ? '#fff3cd' : (isSelected ? '#e8f4fd' : '#ffffff'),
         borderRadius: '8px',
         cursor: showDragHandle ? 'grab' : 'pointer',
-        border: isSelected ? '1px solid #0a66c2' : '1px solid #e0e0e0',
+        border: showSwapOverlay ? '2px solid #ffc107' : (isSelected ? '1px solid #0a66c2' : '1px solid #e0e0e0'),
         marginBottom: '8px',
       }}
       onClick={handleClick}
       {...(showDragHandle ? { ...attributes, ...listeners } : {})}
     >
+      {/* Swap times overlay */}
+      {showSwapOverlay && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(255, 193, 7, 0.2)',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: '#ffc107',
+              color: '#000',
+              padding: '4px 12px',
+              borderRadius: '4px',
+              fontSize: '12px',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}
+          >
+            <ArrowRightLeft style={{ width: '14px', height: '14px' }} />
+            Swap times?
+          </div>
+        </div>
+      )}
       {/* Drag indicator dots at top-left */}
       {showDragHandle && (
         <div
           style={{
             position: 'absolute',
-            top: '6px',
-            left: '6px',
+            top: '8px',
+            left: '12px',
             display: 'flex',
             gap: '2px',
           }}

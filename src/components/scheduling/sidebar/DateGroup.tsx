@@ -2,8 +2,10 @@ import { type Post } from '@/data/posts';
 import { PostListItem } from './PostListItem';
 import { formatFullDate } from '@/lib/time-utils';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
+import { usePosts } from '@/hooks/usePosts';
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Plus } from 'lucide-react';
 
 interface DateGroupProps {
   dateKey: string;
@@ -12,8 +14,23 @@ interface DateGroupProps {
 }
 
 export function DateGroup({ dateKey, posts, showDragHandles = true }: DateGroupProps) {
-  const { currentPostId } = useSchedulingDialog();
+  const { currentPostId, setCurrentPostId, setDraftContent } = useSchedulingDialog();
+  const { createDraft, schedulePost } = usePosts();
   const date = new Date(dateKey);
+
+  const handleAddNewPost = () => {
+    // Create a new draft
+    const newDraft = createDraft();
+
+    // Schedule it for this date at 10:00 AM
+    const scheduledDate = new Date(date);
+    scheduledDate.setHours(10, 0, 0, 0);
+    schedulePost(newDraft.id, scheduledDate.toISOString());
+
+    // Select the new post for editing
+    setCurrentPostId(newDraft.id);
+    setDraftContent('');
+  };
 
   const { setNodeRef, isOver } = useDroppable({
     id: `date-${dateKey}`,
@@ -62,6 +79,39 @@ export function DateGroup({ dateKey, posts, showDragHandles = true }: DateGroupP
           />
         ))}
       </SortableContext>
+
+      {/* Add new post box */}
+      <button
+        onClick={handleAddNewPost}
+        style={{
+          width: '100%',
+          padding: '12px 16px',
+          border: '2px dashed #ccc',
+          borderRadius: '8px',
+          backgroundColor: 'transparent',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px',
+          color: '#666',
+          fontSize: '13px',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = '#0a66c2';
+          e.currentTarget.style.color = '#0a66c2';
+          e.currentTarget.style.backgroundColor = '#f0f7ff';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = '#ccc';
+          e.currentTarget.style.color = '#666';
+          e.currentTarget.style.backgroundColor = 'transparent';
+        }}
+      >
+        <Plus style={{ width: '16px', height: '16px' }} />
+        Add new post
+      </button>
     </div>
   );
 }

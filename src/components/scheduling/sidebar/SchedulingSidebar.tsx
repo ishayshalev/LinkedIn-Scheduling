@@ -2,14 +2,10 @@ import { useState } from 'react';
 import { usePosts } from '@/hooks/usePosts';
 import { PostTabs, type TabType } from './PostTabs';
 import { PostList } from './PostList';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { useSchedulingDialog } from '../SchedulingDialogContext';
 
 export function SchedulingSidebar() {
   const [activeTab, setActiveTab] = useState<TabType>('drafts');
-  const { scheduledPosts, drafts, createDraft } = usePosts();
-  const { setCurrentPostId, setDraftContent } = useSchedulingDialog();
+  const { scheduledPosts, drafts } = usePosts();
 
   const getPostsForTab = () => {
     switch (activeTab) {
@@ -20,13 +16,6 @@ export function SchedulingSidebar() {
       default:
         return [];
     }
-  };
-
-  const handleNewPost = () => {
-    const newDraft = createDraft();
-    setCurrentPostId(newDraft.id);
-    setDraftContent('');
-    setActiveTab('drafts');
   };
 
   return (
@@ -42,27 +31,22 @@ export function SchedulingSidebar() {
         overflow: 'hidden',
       }}
     >
+      {/* Hide scrollbar styles */}
+      <style>{`
+        .sidebar-scroll::-webkit-scrollbar {
+          display: none;
+        }
+        .sidebar-scroll {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+
       {/* Tabs */}
       <PostTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-      {/* New post button */}
-      <div style={{ padding: '12px 16px', borderBottom: '1px solid #e0e0e0' }}>
-        <Button
-          variant="outline"
-          onClick={handleNewPost}
-          style={{
-            width: '100%',
-            justifyContent: 'center',
-            gap: '8px',
-          }}
-        >
-          <Plus style={{ width: '16px', height: '16px' }} />
-          New Post
-        </Button>
-      </div>
-
       {/* Post list */}
-      <div style={{ flex: 1, overflow: 'auto' }}>
+      <div className="sidebar-scroll" style={{ flex: 1, overflow: 'auto' }}>
         <PostList posts={getPostsForTab()} activeTab={activeTab} />
       </div>
     </div>

@@ -10,14 +10,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { ChevronDown, Image, Smile } from 'lucide-react';
+import { ChevronDown, Image, Smile, Loader2, Check } from 'lucide-react';
+
+type SaveState = 'idle' | 'saving' | 'saved';
 
 export function PostEditorActions() {
   const {
     draftContent,
     currentPostId,
-    setIsOpen,
-    resetDialog,
   } = useSchedulingDialog();
 
   const { createDraft, schedulePost, updatePost, scheduledPosts, drafts } = usePosts();
@@ -37,6 +37,7 @@ export function PostEditorActions() {
       ? new Date(currentPost.scheduledFor).toTimeString().slice(0, 5)
       : '10:00'
   );
+  const [saveState, setSaveState] = useState<SaveState>('idle');
 
   // Update date/time when post changes
   useEffect(() => {
@@ -51,8 +52,10 @@ export function PostEditorActions() {
 
   const canPost = draftContent.trim().length > 0;
 
-  const handleSchedule = () => {
-    if (!canPost || !selectedDate) return;
+  const handleSchedule = async () => {
+    if (!canPost || !selectedDate || saveState !== 'idle') return;
+
+    setSaveState('saving');
 
     // Combine date and time
     const [hours, minutes] = selectedTime.split(':').map(Number);
@@ -69,12 +72,19 @@ export function PostEditorActions() {
       schedulePost(draft.id, scheduledDate.toISOString());
     }
 
-    // Clear the editor for a new post but keep dialog open
-    resetDialog();
+    // Show saving for 1 second, then saved for 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setSaveState('saved');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setSaveState('idle');
   };
 
-  const handleSaveDraft = () => {
-    if (!canPost) return;
+  const [draftSaveState, setDraftSaveState] = useState<SaveState>('idle');
+
+  const handleSaveDraft = async () => {
+    if (!canPost || draftSaveState !== 'idle') return;
+
+    setDraftSaveState('saving');
 
     if (currentPostId) {
       updatePost(currentPostId, { content: draftContent });
@@ -83,16 +93,47 @@ export function PostEditorActions() {
       updatePost(draft.id, { content: draftContent });
     }
 
-    resetDialog();
-    setIsOpen(false);
+    // Show saving for 1 second, then saved for 1 second
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setDraftSaveState('saved');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setDraftSaveState('idle');
   };
 
   // Disable past dates
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const getScheduleButtonContent = () => {
+    if (saveState === 'saving') {
+      return (
+        <>
+          <Loader2 style={{ width: '16px', height: '16px', animation: 'spin 1s linear infinite' }} />
+          Saving...
+        </>
+      );
+    }
+    if (saveState === 'saved') {
+      return (
+        <>
+          <Check style={{ width: '16px', height: '16px' }} />
+          Saved
+        </>
+      );
+    }
+    return 'Schedule';
+  };
+
   return (
     <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '12px', marginTop: 'auto' }}>
+      {/* Spinner animation */}
+      <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+
       {/* Media/emoji icons */}
       <div
         style={{
@@ -185,21 +226,47 @@ export function PostEditorActions() {
           {/* Schedule button - primary for scheduled posts */}
           <Button
             onClick={handleSchedule}
-            disabled={!canPost || !selectedDate}
+            disabled={!canPost || !selectedDate || saveState !== 'idle'}
             variant={isScheduledPost ? 'default' : 'outline'}
-            style={{ paddingLeft: '16px', paddingRight: '16px' }}
+            style={{
+              paddingLeft: '16px',
+              paddingRight: '16px',
+              minWidth: '100px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
           >
-            Schedule
+            {getScheduleButtonContent()}
           </Button>
 
           {/* Save Draft button - only for drafts */}
           {!isScheduledPost && (
             <Button
               onClick={handleSaveDraft}
-              disabled={!canPost}
-              style={{ paddingLeft: '16px', paddingRight: '16px' }}
+              disabled={!canPost || draftSaveState !== 'idle'}
+              style={{
+                paddingLeft: '16px',
+                paddingRight: '16px',
+                minWidth: '110px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
             >
-              Save Draft
+              {draftSaveState === 'saving' && (
+                <>
+                  <Loader2 style={{ width: '16px', height: '16px', animation: 'spin 1s linear infinite' }} />
+                  Saving...
+                </>
+              )}
+              {draftSaveState === 'saved' && (
+                <>
+                  <Check style={{ width: '16px', height: '16px' }} />
+                  Saved
+                </>
+              )}
+              {draftSaveState === 'idle' && 'Save Draft'}
             </Button>
           )}
         </div>
