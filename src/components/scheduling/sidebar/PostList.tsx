@@ -70,7 +70,6 @@ export function PostList({ posts, activeTab }: PostListProps) {
       >
         {activeTab === 'scheduled' && 'No scheduled posts'}
         {activeTab === 'drafts' && 'No drafts'}
-        {activeTab === 'posted' && 'No posted content'}
       </div>
     );
   }
@@ -100,7 +99,7 @@ export function PostList({ posts, activeTab }: PostListProps) {
     );
   }
 
-  // For drafts and posted, show flat list
+  // For drafts, show flat list
   return (
     <div style={{ padding: '16px' }}>
       {posts.map((post) => (
@@ -109,7 +108,7 @@ export function PostList({ posts, activeTab }: PostListProps) {
           post={post}
           isSelected={post.id === currentPostId}
           showDragHandle={false}
-          showTime={activeTab === 'posted' && !!post.postedAt}
+          showTime={false}
         />
       ))}
     </div>

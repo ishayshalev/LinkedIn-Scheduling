@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { useSchedulingDialog } from './SchedulingDialogContext';
 import { PostEditor } from './editor/PostEditor';
 import { SchedulingSidebar } from './sidebar/SchedulingSidebar';
+import { ComposeView } from './ComposeView';
 import { X, ArrowLeft } from 'lucide-react';
 
 // Screen reader only styles
@@ -41,15 +42,44 @@ export function SchedulingDialog() {
     setDraftContent('');
   };
 
+  // Compose mode - LinkedIn style
+  if (mode === 'compose') {
+    return (
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogContent
+          showCloseButton={false}
+          style={{
+            maxWidth: '552px',
+            width: '90vw',
+            minHeight: '380px',
+            maxHeight: '80vh',
+            padding: 0,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            borderRadius: '8px',
+          }}
+        >
+          <span style={srOnlyStyle}>
+            <DialogTitle>Create a post</DialogTitle>
+          </span>
+
+          <ComposeView onClose={() => handleOpenChange(false)} />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Scheduler mode - two panel layout
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent
         showCloseButton={false}
         style={{
-          maxWidth: mode === 'scheduler' ? '1100px' : '600px',
+          maxWidth: '1100px',
           width: '90vw',
-          height: mode === 'scheduler' ? '80vh' : 'auto',
-          maxHeight: mode === 'scheduler' ? '700px' : '80vh',
+          height: '80vh',
+          maxHeight: '700px',
           padding: 0,
           overflow: 'hidden',
           display: 'flex',
@@ -57,12 +87,10 @@ export function SchedulingDialog() {
         }}
       >
         <span style={srOnlyStyle}>
-          <DialogTitle>
-            {mode === 'compose' ? 'Create a post' : 'Scheduled Posts'}
-          </DialogTitle>
+          <DialogTitle>Scheduled Posts</DialogTitle>
         </span>
 
-        {/* Header */}
+        {/* Header for scheduler mode */}
         <div
           style={{
             display: 'flex',
@@ -74,28 +102,26 @@ export function SchedulingDialog() {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            {mode === 'scheduler' && (
-              <button
-                onClick={handleBackToCompose}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '8px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f3f3')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                title="New post"
-              >
-                <ArrowLeft style={{ width: '20px', height: '20px', color: '#666' }} />
-              </button>
-            )}
+            <button
+              onClick={handleBackToCompose}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '8px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f3f3')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+              title="New post"
+            >
+              <ArrowLeft style={{ width: '20px', height: '20px', color: '#666' }} />
+            </button>
             <h2 style={{ fontSize: '16px', fontWeight: 600, margin: 0 }}>
-              {mode === 'compose' ? 'Create a post' : 'Scheduled Posts'}
+              Scheduled Posts
             </h2>
           </div>
           <button
@@ -125,7 +151,7 @@ export function SchedulingDialog() {
             overflow: 'hidden',
           }}
         >
-          {mode === 'scheduler' && <SchedulingSidebar />}
+          <SchedulingSidebar />
           <PostEditor />
         </div>
       </DialogContent>

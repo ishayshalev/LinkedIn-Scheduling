@@ -1,6 +1,6 @@
 import { usePosts } from '@/hooks/usePosts';
 
-export type TabType = 'scheduled' | 'drafts' | 'posted';
+export type TabType = 'scheduled' | 'drafts';
 
 interface PostTabsProps {
   activeTab: TabType;
@@ -8,12 +8,11 @@ interface PostTabsProps {
 }
 
 export function PostTabs({ activeTab, onTabChange }: PostTabsProps) {
-  const { scheduledPosts, drafts, postedPosts } = usePosts();
+  const { scheduledPosts, drafts } = usePosts();
 
   const tabs: { id: TabType; label: string; count: number }[] = [
-    { id: 'scheduled', label: 'Scheduled', count: scheduledPosts.length },
     { id: 'drafts', label: 'Drafts', count: drafts.length },
-    { id: 'posted', label: 'Posted', count: postedPosts.length },
+    { id: 'scheduled', label: 'Scheduled', count: scheduledPosts.length },
   ];
 
   return (

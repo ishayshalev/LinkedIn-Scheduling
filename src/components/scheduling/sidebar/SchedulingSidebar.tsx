@@ -7,8 +7,8 @@ import { Plus } from 'lucide-react';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
 
 export function SchedulingSidebar() {
-  const [activeTab, setActiveTab] = useState<TabType>('scheduled');
-  const { scheduledPosts, drafts, postedPosts, createDraft } = usePosts();
+  const [activeTab, setActiveTab] = useState<TabType>('drafts');
+  const { scheduledPosts, drafts, createDraft } = usePosts();
   const { setCurrentPostId, setDraftContent } = useSchedulingDialog();
 
   const getPostsForTab = () => {
@@ -17,8 +17,6 @@ export function SchedulingSidebar() {
         return scheduledPosts;
       case 'drafts':
         return drafts;
-      case 'posted':
-        return postedPosts;
       default:
         return [];
     }
@@ -38,7 +36,7 @@ export function SchedulingSidebar() {
         flexShrink: 0,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#fafafa',
+        backgroundColor: '#ffffff',
         borderRight: '1px solid #e0e0e0',
         height: '100%',
         overflow: 'hidden',
