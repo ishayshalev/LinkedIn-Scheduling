@@ -156,7 +156,7 @@ export function TopNav() {
       <div style={{
         maxWidth: '1128px',
         margin: '0 auto',
-        padding: '12px',
+        padding: '0',
         height: '52px',
         display: 'flex',
         alignItems: 'center',
@@ -177,10 +177,9 @@ export function TopNav() {
               left: '12px',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: 'rgba(0,0,0,0.9)',
+              color: 'rgba(0,0,0,0.6)',
               display: 'flex',
               alignItems: 'center',
-              pointerEvents: 'none',
             }}>
               <SearchIcon />
             </div>
@@ -192,13 +191,12 @@ export function TopNav() {
                 height: '34px',
                 paddingLeft: '36px',
                 paddingRight: '12px',
-                backgroundColor: 'transparent',
-                borderRadius: '17px',
+                backgroundColor: '#eef3f8',
+                borderRadius: '4px',
                 fontSize: '14px',
-                border: '1px solid rgba(0,0,0,0.3)',
+                border: 'none',
                 outline: 'none',
                 color: 'rgba(0,0,0,0.9)',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
               }}
             />
           </div>
