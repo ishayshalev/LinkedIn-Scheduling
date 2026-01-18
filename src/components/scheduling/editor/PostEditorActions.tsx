@@ -1,42 +1,63 @@
+import { useState, useEffect } from 'react';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
 import { usePosts } from '@/hooks/usePosts';
 import { Button } from '@/components/ui/button';
-import { Clock, Calendar, ChevronDown, Image, Smile } from 'lucide-react';
-import { DateTimeSelector } from '../datetime/DateTimeSelector';
-import { formatDate } from '@/lib/time-utils';
+import { Calendar } from '@/components/ui/calendar';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { ChevronDown, Image, Smile } from 'lucide-react';
 
 export function PostEditorActions() {
   const {
     draftContent,
     currentPostId,
-    showSchedulePicker,
-    setShowSchedulePicker,
-    selectedDate,
-    selectedTime,
     setIsOpen,
     resetDialog,
-    openSchedulerMode,
-    mode,
   } = useSchedulingDialog();
 
-  const { createDraft, schedulePost, updatePost, scheduledPosts } = usePosts();
+  const { createDraft, schedulePost, updatePost, scheduledPosts, drafts } = usePosts();
+
+  // Determine if current post is scheduled
+  const currentPost = currentPostId
+    ? [...scheduledPosts, ...drafts].find(p => p.id === currentPostId)
+    : null;
+  const isScheduledPost = currentPost?.status === 'scheduled';
+
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    currentPost?.scheduledFor ? new Date(currentPost.scheduledFor) : undefined
+  );
+  const [selectedTime, setSelectedTime] = useState(
+    currentPost?.scheduledFor
+      ? new Date(currentPost.scheduledFor).toTimeString().slice(0, 5)
+      : '10:00'
+  );
+
+  // Update date/time when post changes
+  useEffect(() => {
+    if (currentPost?.scheduledFor) {
+      setSelectedDate(new Date(currentPost.scheduledFor));
+      setSelectedTime(new Date(currentPost.scheduledFor).toTimeString().slice(0, 5));
+    } else {
+      setSelectedDate(undefined);
+      setSelectedTime('10:00');
+    }
+  }, [currentPostId, currentPost?.scheduledFor]);
 
   const canPost = draftContent.trim().length > 0;
 
   const handleSchedule = () => {
     if (!canPost || !selectedDate) return;
 
-    // Parse time and create full date
+    // Combine date and time
+    const [hours, minutes] = selectedTime.split(':').map(Number);
     const scheduledDate = new Date(selectedDate);
-    const match = selectedTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
-    if (match) {
-      let hours = parseInt(match[1], 10);
-      const minutes = parseInt(match[2], 10);
-      const isPM = match[3].toUpperCase() === 'PM';
-      if (isPM && hours !== 12) hours += 12;
-      if (!isPM && hours === 12) hours = 0;
-      scheduledDate.setHours(hours, minutes, 0, 0);
-    }
+    scheduledDate.setHours(hours, minutes, 0, 0);
 
     // Create or update post
     if (currentPostId) {
@@ -48,9 +69,8 @@ export function PostEditorActions() {
       schedulePost(draft.id, scheduledDate.toISOString());
     }
 
-    setShowSchedulePicker(false);
+    // Clear the editor for a new post but keep dialog open
     resetDialog();
-    setIsOpen(false);
   };
 
   const handleSaveDraft = () => {
@@ -67,22 +87,12 @@ export function PostEditorActions() {
     setIsOpen(false);
   };
 
-  const getScheduleButtonText = () => {
-    if (selectedDate) {
-      return `${formatDate(selectedDate)} at ${selectedTime}`;
-    }
-    return 'Schedule';
-  };
+  // Disable past dates
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   return (
     <div style={{ borderTop: '1px solid #e0e0e0', paddingTop: '12px', marginTop: 'auto' }}>
-      {/* Schedule picker */}
-      {showSchedulePicker && (
-        <div style={{ marginBottom: '16px' }}>
-          <DateTimeSelector onConfirm={handleSchedule} />
-        </div>
-      )}
-
       {/* Media/emoji icons */}
       <div
         style={{
@@ -127,54 +137,71 @@ export function PostEditorActions() {
         </div>
 
         {/* Action buttons */}
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          {/* Scheduled Posts button (only in compose mode) */}
-          {mode === 'compose' && scheduledPosts.length > 0 && (
-            <button
-              onClick={openSchedulerMode}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                padding: '8px 12px',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '14px',
-                color: '#0a66c2',
-                fontWeight: 600,
-              }}
-            >
-              <Calendar style={{ width: '16px', height: '16px' }} />
-              Scheduled Posts ({scheduledPosts.length})
-            </button>
-          )}
-
-          {/* Schedule button with dropdown */}
-          <div style={{ position: 'relative' }}>
-            <Button
-              variant="outline"
-              onClick={() => setShowSchedulePicker(!showSchedulePicker)}
-              disabled={!canPost}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
-              <Clock style={{ width: '16px', height: '16px' }} />
-              {getScheduleButtonText()}
-              <ChevronDown style={{ width: '14px', height: '14px' }} />
-            </Button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
+          {/* Date picker */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <Label style={{ fontSize: '12px', color: '#666' }}>Date</Label>
+            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  style={{
+                    width: '130px',
+                    justifyContent: 'space-between',
+                    fontWeight: 400,
+                    paddingLeft: '12px',
+                    paddingRight: '12px',
+                  }}
+                >
+                  {selectedDate ? selectedDate.toLocaleDateString() : 'Select date'}
+                  <ChevronDown style={{ width: '16px', height: '16px' }} />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  disabled={{ before: today }}
+                  onSelect={(date) => {
+                    setSelectedDate(date);
+                    setDatePickerOpen(false);
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
-          {/* Post / Save Draft button */}
+          {/* Time picker */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <Label style={{ fontSize: '12px', color: '#666' }}>Time</Label>
+            <Input
+              type="time"
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              style={{ width: '100px', paddingLeft: '12px', paddingRight: '12px' }}
+            />
+          </div>
+
+          {/* Schedule button - primary for scheduled posts */}
           <Button
-            onClick={handleSaveDraft}
-            disabled={!canPost}
+            onClick={handleSchedule}
+            disabled={!canPost || !selectedDate}
+            variant={isScheduledPost ? 'default' : 'outline'}
+            style={{ paddingLeft: '16px', paddingRight: '16px' }}
           >
-            {currentPostId ? 'Save' : 'Save Draft'}
+            Schedule
           </Button>
+
+          {/* Save Draft button - only for drafts */}
+          {!isScheduledPost && (
+            <Button
+              onClick={handleSaveDraft}
+              disabled={!canPost}
+              style={{ paddingLeft: '16px', paddingRight: '16px' }}
+            >
+              Save Draft
+            </Button>
+          )}
         </div>
       </div>
     </div>

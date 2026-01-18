@@ -84,6 +84,7 @@ export function SchedulingDialog() {
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
+          backgroundColor: 'var(--card)',
         }}
       >
         <span style={srOnlyStyle}>
@@ -99,6 +100,7 @@ export function SchedulingDialog() {
             padding: '12px 16px',
             borderBottom: '1px solid #e0e0e0',
             flexShrink: 0,
+            backgroundColor: 'white',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

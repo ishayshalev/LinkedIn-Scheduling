@@ -26,7 +26,7 @@ export function PostTextArea() {
 
       {/* Text area */}
       <textarea
-        placeholder="What do you want to talk about?"
+        placeholder="Start a post..."
         value={draftContent}
         onChange={(e) => setDraftContent(e.target.value)}
         style={{

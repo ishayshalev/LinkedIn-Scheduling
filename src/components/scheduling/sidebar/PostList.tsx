@@ -85,7 +85,7 @@ export function PostList({ posts, activeTab }: PostListProps) {
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
-        <div style={{ padding: '16px' }}>
+        <div style={{ padding: 0 }}>
           {sortedDates.map((dateKey) => (
             <DateGroup
               key={dateKey}

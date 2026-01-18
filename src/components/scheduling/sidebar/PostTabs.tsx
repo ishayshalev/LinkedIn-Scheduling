@@ -20,7 +20,6 @@ export function PostTabs({ activeTab, onTabChange }: PostTabsProps) {
       style={{
         display: 'flex',
         borderBottom: '1px solid #e0e0e0',
-        padding: '0 16px',
       }}
     >
       {tabs.map((tab) => (
@@ -28,6 +27,7 @@ export function PostTabs({ activeTab, onTabChange }: PostTabsProps) {
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           style={{
+            flex: 1,
             padding: '12px 16px',
             fontSize: '14px',
             fontWeight: activeTab === tab.id ? 600 : 400,
@@ -39,6 +39,7 @@ export function PostTabs({ activeTab, onTabChange }: PostTabsProps) {
             marginBottom: '-1px',
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'center',
             gap: '6px',
           }}
         >

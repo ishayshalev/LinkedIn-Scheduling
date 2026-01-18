@@ -28,7 +28,7 @@ export function DateGroup({ dateKey, posts, showDragHandles = true }: DateGroupP
       ref={setNodeRef}
       style={{
         marginBottom: '24px',
-        padding: '8px',
+        padding: '8px 12px',
         borderRadius: '8px',
         backgroundColor: isOver ? '#f0f7ff' : 'transparent',
         transition: 'background-color 0.2s',

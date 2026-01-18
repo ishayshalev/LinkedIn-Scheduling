@@ -1,7 +1,7 @@
 import { type Post } from '@/data/posts';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
 import { formatTime } from '@/lib/time-utils';
-import { GripVertical, Image } from 'lucide-react';
+import { Image } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -44,88 +44,106 @@ export function PostListItem({
 
   const contentPreview = post.content.length > 80
     ? post.content.substring(0, 80) + '...'
-    : post.content;
+    : post.content || 'Start a post...';
 
   return (
     <div
       ref={setNodeRef}
       style={{
         ...style,
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '8px',
+        position: 'relative',
         padding: '12px',
-        backgroundColor: isSelected ? '#e8f4fd' : 'white',
+        backgroundColor: isSelected ? '#e8f4fd' : '#ffffff',
         borderRadius: '8px',
-        cursor: 'pointer',
+        cursor: showDragHandle ? 'grab' : 'pointer',
         border: isSelected ? '1px solid #0a66c2' : '1px solid #e0e0e0',
         marginBottom: '8px',
       }}
       onClick={handleClick}
+      {...(showDragHandle ? { ...attributes, ...listeners } : {})}
     >
-      {/* Drag handle */}
+      {/* Drag indicator dots at top-left */}
       {showDragHandle && (
         <div
-          {...attributes}
-          {...listeners}
           style={{
-            cursor: 'grab',
-            padding: '4px',
-            color: '#999',
-            flexShrink: 0,
+            position: 'absolute',
+            top: '6px',
+            left: '6px',
+            display: 'flex',
+            gap: '2px',
           }}
-          onClick={(e) => e.stopPropagation()}
         >
-          <GripVertical style={{ width: '16px', height: '16px' }} />
+          <div style={{ width: '3px', height: '3px', backgroundColor: '#ccc', borderRadius: '50%' }} />
+          <div style={{ width: '3px', height: '3px', backgroundColor: '#ccc', borderRadius: '50%' }} />
         </div>
       )}
 
-      {/* Post content */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        {/* Time */}
-        {showTime && post.scheduledFor && (
-          <div
-            style={{
-              fontSize: '12px',
-              fontWeight: 600,
-              color: '#0a66c2',
-              marginBottom: '4px',
-            }}
-          >
-            {formatTime(new Date(post.scheduledFor))}
-          </div>
-        )}
+      {/* Content preview */}
+      <div
+        style={{
+          fontSize: '13px',
+          color: post.content ? '#333' : '#999',
+          lineHeight: 1.4,
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          paddingTop: showDragHandle ? '8px' : 0,
+        }}
+      >
+        {contentPreview}
+      </div>
 
-        {/* Content preview */}
+      {/* Time display for scheduled posts - below content */}
+      {showTime && post.scheduledFor && (
         <div
           style={{
-            fontSize: '13px',
-            color: '#333',
-            lineHeight: 1.4,
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
+            fontSize: '12px',
+            fontWeight: 600,
+            color: '#0a66c2',
+            marginTop: '8px',
           }}
         >
-          {contentPreview}
+          {formatTime(new Date(post.scheduledFor))}
         </div>
+      )}
 
-        {/* Image indicator */}
-        {post.hasImage && (
-          <div
+      {/* Media preview */}
+      {post.hasImage && post.imageUrl && (
+        <div
+          style={{
+            marginTop: '8px',
+            borderRadius: '4px',
+            overflow: 'hidden',
+          }}
+        >
+          <img
+            src={post.imageUrl}
+            alt="Post media"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              marginTop: '8px',
-              color: '#666',
-              fontSize: '12px',
+              width: '100%',
+              maxHeight: '80px',
+              objectFit: 'cover',
+              borderRadius: '4px',
             }}
-          >
-            <Image style={{ width: '14px', height: '14px' }} />
-            Image attached
-          </div>
-        )}
-      </div>
+          />
+        </div>
+      )}
+
+      {/* Image indicator (if has image but no URL) */}
+      {post.hasImage && !post.imageUrl && (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+            marginTop: '8px',
+            color: '#666',
+            fontSize: '12px',
+          }}
+        >
+          <Image style={{ width: '14px', height: '14px' }} />
+          Image attached
+        </div>
+      )}
     </div>
   );
 }
