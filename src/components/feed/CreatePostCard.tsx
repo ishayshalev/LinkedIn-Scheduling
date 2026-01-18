@@ -1,7 +1,10 @@
 import { Video, Image, FileText } from 'lucide-react';
 import { user } from '@/data/user';
+import { useSchedulingDialog } from '@/components/scheduling/SchedulingDialogContext';
 
 export function CreatePostCard() {
+  const { openComposeMode } = useSchedulingDialog();
+
   return (
     <div style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e0e0e0', padding: '16px' }}>
       {/* Top row - Avatar and Input */}
@@ -11,7 +14,10 @@ export function CreatePostCard() {
           alt={user.name}
           style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
         />
-        <button style={{ flex: 1, height: '48px', padding: '0 16px', textAlign: 'left', border: '1px solid rgba(0,0,0,0.3)', borderRadius: '24px', fontSize: '14px', color: 'rgba(0,0,0,0.6)', backgroundColor: 'transparent', cursor: 'pointer', fontWeight: 500 }}>
+        <button
+          onClick={openComposeMode}
+          style={{ flex: 1, height: '48px', padding: '0 16px', textAlign: 'left', border: '1px solid rgba(0,0,0,0.3)', borderRadius: '24px', fontSize: '14px', color: 'rgba(0,0,0,0.6)', backgroundColor: 'transparent', cursor: 'pointer', fontWeight: 500 }}
+        >
           Start a post
         </button>
       </div>
