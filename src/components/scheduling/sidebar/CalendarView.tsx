@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { type Post } from '@/data/posts';
 import { PostListItem } from './PostListItem';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
+import { usePosts } from '@/hooks/usePosts';
 import {
   format,
   isSameDay,
@@ -19,7 +20,14 @@ interface CalendarViewProps {
 export function CalendarView({ posts }: CalendarViewProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [weekOffset, setWeekOffset] = useState(0); // 0 = current 2 weeks, 1 = next 2 weeks, etc.
-  const { currentPostId } = useSchedulingDialog();
+  const { currentPostId, setCurrentPostId, setDraftContent } = useSchedulingDialog();
+  const { createDraft } = usePosts();
+
+  const handleAddNewPost = () => {
+    const newDraft = createDraft();
+    setCurrentPostId(newDraft.id);
+    setDraftContent('');
+  };
 
   const today = useMemo(() => startOfDay(new Date()), []);
 
@@ -457,6 +465,40 @@ export function CalendarView({ posts }: CalendarViewProps) {
               ))}
             </div>
           )}
+
+          {/* Add new post button */}
+          <button
+            onClick={handleAddNewPost}
+            style={{
+              width: '100%',
+              padding: '12px',
+              marginTop: '12px',
+              border: '2px dashed #ccc',
+              borderRadius: '8px',
+              backgroundColor: 'transparent',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              color: '#666',
+              fontSize: '13px',
+              transition: 'all 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#0a66c2';
+              e.currentTarget.style.color = '#0a66c2';
+              e.currentTarget.style.backgroundColor = '#f0f7ff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#ccc';
+              e.currentTarget.style.color = '#666';
+              e.currentTarget.style.backgroundColor = 'transparent';
+            }}
+          >
+            <Plus style={{ width: '16px', height: '16px' }} />
+            Add new post
+          </button>
         </div>
       </div>
     </div>
