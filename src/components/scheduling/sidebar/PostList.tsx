@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { type Post } from '@/data/posts';
 import { DateGroup } from './DateGroup';
 import { PostListItem } from './PostListItem';
@@ -13,7 +14,6 @@ import {
   TouchSensor,
   useSensor,
   useSensors,
-  DragOverlay,
   type DragStartEvent,
   type DragEndEvent,
 } from '@dnd-kit/core';
@@ -30,6 +30,19 @@ export function PostList({ posts, activeTab }: PostListProps) {
   const { currentPostId, setCurrentPostId, setDraftContent } = useSchedulingDialog();
   const { swapPostTimes, movePostToDate, createDraft, scheduledPosts } = usePosts();
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+
+  // Track mouse position for custom overlay
+  useEffect(() => {
+    if (!activeId) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [activeId]);
 
   const handleAddNewDraft = () => {
     const newDraft = createDraft();
@@ -58,6 +71,11 @@ export function PostList({ posts, activeTab }: PostListProps) {
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
+    // Capture initial cursor position
+    const activatorEvent = event.activatorEvent as MouseEvent;
+    if (activatorEvent) {
+      setCursorPos({ x: activatorEvent.clientX, y: activatorEvent.clientY });
+    }
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -123,30 +141,32 @@ export function PostList({ posts, activeTab }: PostListProps) {
             />
           ))}
         </div>
-        <DragOverlay dropAnimation={null}>
-          {activePost ? (
-            <div
-              style={{
-                // ADJUST THESE to position card relative to cursor:
-                // translate(Xpx, Ypx) - positive = right/down
-                transform: 'translate(0px, 0px)',
-                padding: '12px',
-                backgroundColor: '#ffffff',
-                borderRadius: '8px',
-                border: '2px solid #0a66c2',
-                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                maxWidth: '300px',
-                cursor: 'grabbing',
-              }}
-            >
-              <div style={{ fontSize: '13px', color: '#333', lineHeight: 1.4 }}>
-                {activePost.content.length > 80
-                  ? activePost.content.substring(0, 80) + '...'
-                  : activePost.content || 'Start a post...'}
-              </div>
+        {/* Custom drag overlay rendered via portal to avoid Dialog transform issues */}
+        {activePost && createPortal(
+          <div
+            style={{
+              position: 'fixed',
+              left: cursorPos.x + 15,
+              top: cursorPos.y + 15,
+              padding: '12px',
+              backgroundColor: '#ffffff',
+              borderRadius: '8px',
+              border: '2px solid #0a66c2',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              maxWidth: '280px',
+              cursor: 'grabbing',
+              pointerEvents: 'none',
+              zIndex: 10000,
+            }}
+          >
+            <div style={{ fontSize: '13px', color: '#333', lineHeight: 1.4 }}>
+              {activePost.content.length > 80
+                ? activePost.content.substring(0, 80) + '...'
+                : activePost.content || 'Start a post...'}
             </div>
-          ) : null}
-        </DragOverlay>
+          </div>,
+          document.body
+        )}
       </DndContext>
     );
   }
