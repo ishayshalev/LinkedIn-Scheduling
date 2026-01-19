@@ -405,7 +405,7 @@ export function CalendarView({ posts }: CalendarViewProps) {
 
       {/* Selected Date Posts */}
       <div style={{ flex: 1, overflow: 'auto' }}>
-        <div style={{ padding: '12px 16px' }}>
+        <div style={{ padding: '8px 12px' }}>
           <div
             style={{
               fontSize: '12px',
@@ -471,8 +471,7 @@ export function CalendarView({ posts }: CalendarViewProps) {
             onClick={handleAddNewPost}
             style={{
               width: '100%',
-              padding: '12px',
-              marginTop: '12px',
+              padding: '12px 16px',
               border: '2px dashed #ccc',
               borderRadius: '8px',
               backgroundColor: 'transparent',
