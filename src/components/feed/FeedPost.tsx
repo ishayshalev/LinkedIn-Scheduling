@@ -142,10 +142,27 @@ export function FeedPost({ post }: FeedPostProps) {
       <div style={{ padding: '12px 16px' }}>
         <p style={{ fontSize: '14px', color: 'rgba(0,0,0,0.9)', whiteSpace: 'pre-line', lineHeight: '20px', margin: 0, direction: contentIsRTL ? 'rtl' : 'ltr', textAlign: contentIsRTL ? 'right' : 'left' }}>
           {post.content}
-          {post.content.length > 200 && (
+          {!post.websiteLink && post.content.length > 200 && (
             <button style={{ color: 'rgba(0,0,0,0.6)', fontWeight: 600, border: 'none', backgroundColor: 'transparent', cursor: 'pointer', padding: 0 }}>...more</button>
           )}
         </p>
+        {post.websiteLink && (
+          <a
+            href={post.websiteLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'block',
+              marginTop: '8px',
+              fontSize: '14px',
+              fontWeight: 600,
+              color: '#0a66c2',
+              textDecoration: 'none',
+            }}
+          >
+            {post.websiteLink.replace(/^https?:\/\//, '')}
+          </a>
+        )}
         {post.showTranslation && (
           <button style={{ marginTop: '8px', fontSize: '14px', fontWeight: 600, color: 'rgba(0,0,0,0.6)', border: 'none', backgroundColor: 'transparent', cursor: 'pointer', padding: 0 }}>
             Show translation

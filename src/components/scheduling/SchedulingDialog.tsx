@@ -33,10 +33,6 @@ export function SchedulingDialog() {
   };
 
   const handleBackToCompose = () => {
-    if (hasUnsavedChanges) {
-      const confirmed = window.confirm('You have unsaved changes. Are you sure you want to create a new post?');
-      if (!confirmed) return;
-    }
     setMode('compose');
     setCurrentPostId(null);
     setDraftContent('');

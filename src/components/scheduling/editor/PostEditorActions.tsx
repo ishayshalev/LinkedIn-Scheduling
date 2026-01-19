@@ -2,15 +2,9 @@ import { useState, useEffect } from 'react';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
 import { usePosts } from '@/hooks/usePosts';
 import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { ChevronDown, Image, Smile, Loader2, Check } from 'lucide-react';
+import { Image, Smile, Loader2, Check } from 'lucide-react';
 
 type SaveState = 'idle' | 'saving' | 'saved';
 
@@ -28,7 +22,6 @@ export function PostEditorActions() {
     : null;
   const isScheduledPost = currentPost?.status === 'scheduled';
 
-  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     currentPost?.scheduledFor ? new Date(currentPost.scheduledFor) : undefined
   );
@@ -179,37 +172,19 @@ export function PostEditorActions() {
 
         {/* Action buttons */}
         <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-end' }}>
-          {/* Date picker */}
+          {/* Date picker - native */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <Label style={{ fontSize: '12px', color: '#666' }}>Date</Label>
-            <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  style={{
-                    width: '130px',
-                    justifyContent: 'space-between',
-                    fontWeight: 400,
-                    paddingLeft: '12px',
-                    paddingRight: '12px',
-                  }}
-                >
-                  {selectedDate ? selectedDate.toLocaleDateString() : 'Select date'}
-                  <ChevronDown style={{ width: '16px', height: '16px' }} />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  disabled={{ before: today }}
-                  onSelect={(date) => {
-                    setSelectedDate(date);
-                    setDatePickerOpen(false);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
+            <Input
+              type="date"
+              value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+              min={today.toISOString().split('T')[0]}
+              onChange={(e) => {
+                const date = e.target.value ? new Date(e.target.value + 'T00:00:00') : undefined;
+                setSelectedDate(date);
+              }}
+              style={{ width: '140px', paddingLeft: '12px', paddingRight: '12px' }}
+            />
           </div>
 
           {/* Time picker */}

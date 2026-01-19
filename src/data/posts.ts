@@ -35,6 +35,7 @@ export interface FeedPost {
   promotedBy?: string;
   showTranslation?: boolean;
   actionButton?: 'connect' | 'follow';
+  websiteLink?: string;
 }
 
 // Get today's date and create dates relative to it
@@ -49,43 +50,71 @@ const getDateString = (daysFromToday: number, hours: number, minutes: number) =>
 export const initialScheduledPosts: Post[] = [
   {
     id: "post-1",
-    content: "Man vibe coding is something else. Started playing around with cursor, and it can feel so stupid and so smart sometimes.\n\nhopefully its going to get better soon, going to ship some cool stuff with it for the agency and clients",
-    scheduledFor: getDateString(0, 9, 0), // Today 9:00 AM
+    content: "Hot take: I'm probably the best design & development partner you'll ever have.\n\nI mean, I built this entire scheduling tool in a weekend just to prove a point.\n\nThe point? I have no idea. But it looks pretty good, right?\n\n(DMs are open if you want to argue about this)",
+    scheduledFor: getDateString(0, 10, 0), // Today 10:00 AM
     status: "scheduled",
     hasImage: false,
   },
   {
     id: "post-2",
-    content: "Quick design tip: Always test your mobile layouts at actual phone size, not just responsive browser windows.\n\nThe difference is huge. Your thumb can't reach that button on a real phone.",
-    scheduledFor: getDateString(0, 14, 15), // Today 2:15 PM
+    content: "The secret to great product design?\n\nStop designing for users. Start designing WITH them.\n\nEvery project at the agency starts with a deep dive into user behavior. Not assumptions. Not guesses. Real data.\n\nThe designs that convert are the ones built on evidence.",
+    scheduledFor: getDateString(1, 9, 0), // Tomorrow 9:00 AM
     status: "scheduled",
     hasImage: false,
   },
   {
     id: "post-3",
-    content: "When you design a product, I always try to optimize for the 1 goal that matters most.\n\nEverything else is secondary.",
-    scheduledFor: getDateString(1, 10, 30), // Tomorrow 10:30 AM
+    content: "Unpopular opinion: Your startup doesn't need a full-time designer.\n\nWhat you need is:\n• Someone who gets product\n• Fast iteration cycles\n• Design that ships, not sits in Figma\n\nThat's exactly why agencies like ours exist.",
+    scheduledFor: getDateString(1, 14, 0), // Tomorrow 2:00 PM
     status: "scheduled",
     hasImage: false,
   },
   {
     id: "post-4",
-    content: "I recently had a talk with Jeff Kapinski about growing my agency...\n\nHere are 5 things I learned that changed how I think about scaling:\n\n1. Focus on outcomes, not outputs\n2. Hire slow, fire fast\n3. Process is your product\n4. Charge for value, not time\n5. Build systems, not dependencies",
-    scheduledFor: getDateString(2, 9, 0), // Day after tomorrow 9:00 AM
+    content: "Just wrapped up a rebrand for a fintech startup.\n\nThey came to us with: \"We look like every other finance app.\"\n\nWe gave them: A visual identity that actually reflects their innovation.\n\n3 weeks. Full brand system. Website. App redesign.\n\nThis is what happens when design and dev work together.",
+    scheduledFor: getDateString(2, 10, 30), // Day after tomorrow 10:30 AM
     status: "scheduled",
     hasImage: true,
   },
   {
     id: "post-5",
-    content: "What's the one tool you couldn't live without as a designer?\n\nI'll go first: Figma's auto-layout changed everything for me.",
-    scheduledFor: getDateString(2, 16, 0), // Day after tomorrow 4:00 PM
+    content: "Why do most MVPs look terrible?\n\nBecause founders think design is a nice-to-have.\n\nReality check: Your MVP IS your first impression. Users don't know it's an MVP. They just see a product that looks unfinished.\n\nInvest in design early. It's cheaper than losing users.",
+    scheduledFor: getDateString(3, 9, 0), // 3 days 9:00 AM
     status: "scheduled",
     hasImage: false,
   },
   {
     id: "post-6",
-    content: "Story of how I started my agency...\n\nI was working at a startup, grinding 60+ hours a week, and realized I was building someone else's dream.\n\nSo I took the leap. Started freelancing. Then built a team.\n\n3 years later, we've worked with 40+ companies.\n\nThe lesson? Sometimes the scariest path is the right one.",
-    scheduledFor: getDateString(3, 11, 0), // 3 days from now 11:00 AM
+    content: "The tech stack doesn't matter.\n\nReact, Vue, Svelte - pick one.\n\nWhat matters:\n→ Does it ship fast?\n→ Can you maintain it?\n→ Does the user care?\n\nSpoiler: The user never cares what framework you used.",
+    scheduledFor: getDateString(3, 15, 0), // 3 days 3:00 PM
+    status: "scheduled",
+    hasImage: false,
+  },
+  {
+    id: "post-7",
+    content: "Every client asks: \"How long will it take?\"\n\nHonest answer: It depends on how fast you give feedback.\n\nWe've built full products in 4 weeks.\nWe've also seen simple landing pages take 3 months.\n\nThe difference? Client responsiveness.\n\nDesign is a collaboration, not a delivery service.",
+    scheduledFor: getDateString(4, 11, 0), // 4 days 11:00 AM
+    status: "scheduled",
+    hasImage: false,
+  },
+  {
+    id: "post-8",
+    content: "Raised my agency rates by 40% this year.\n\nLost some clients.\nAttracted better ones.\n\nThe lesson: Price reflects positioning. If you want premium clients, you need premium pricing.\n\nCheap clients will always find something to complain about. Premium clients trust the process.",
+    scheduledFor: getDateString(5, 9, 30), // 5 days 9:30 AM
+    status: "scheduled",
+    hasImage: false,
+  },
+  {
+    id: "post-9",
+    content: "Tools I use daily at the agency:\n\n• Figma - design\n• Cursor - development\n• Linear - project management\n• Slack - async communication\n• Loom - client updates\n\nSimple stack. No complexity. Ship fast.\n\nWhat's in your toolkit?",
+    scheduledFor: getDateString(6, 10, 0), // 6 days 10:00 AM
+    status: "scheduled",
+    hasImage: false,
+  },
+  {
+    id: "post-10",
+    content: "The best compliment a client ever gave us:\n\n\"It feels like you're part of our team, not an external agency.\"\n\nThat's the goal. We don't do handoffs and disappear.\n\nWe embed. We iterate. We care about the outcome as much as you do.\n\nThat's what separates good agencies from great ones.",
+    scheduledFor: getDateString(7, 14, 0), // 7 days 2:00 PM
     status: "scheduled",
     hasImage: false,
   },
@@ -133,62 +162,71 @@ export const feedPosts: FeedPost[] = [
   {
     id: "feed-1",
     author: {
-      name: "Ofer Monar, Ph.D.",
-      headline: "Founder and head lecturer at Uxer - UX Studies and consultancy",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
-      isVerified: true,
-      connectionDegree: "2nd",
+      name: "Yishay Shalev",
+      headline: "Design + Development for Tech companies at shalev.agency",
+      avatar: "/yishay-avatar.jpeg",
+      isVerified: false,
+      connectionDegree: "1st",
     },
-    content: "יש לכם חברה ואתם צריכים מתמחים למחקר ועיצוב UI/UX?\nמעולה! יש לנו כאלה!!\nבמסגרת ההתמחות באפיון חוויית משתמש תחת תואר ראשון בפסיכולוגיה באקדמית ת״א יפו,\nפתחנו את ההרשמה להברות הרוצות להשתתף בתכנית ההתמחות UX ל-2026 (מרץ עד יוני).",
-    timeAgo: "29m",
-    engagement: { likes: 48, comments: 12, reposts: 3 },
-    celebratedBy: "Guy Magen",
-    showTranslation: true,
-    actionButton: "connect",
+    content: "Hot take: I'm probably the best design partner you'll ever have.\n\nI mean, I built this entire scheduling tool in a weekend just to prove a point.\n\nThe point? I have no idea. But it looks pretty good, right?\n\n(DMs are open if you want to argue about this)",
+    timeAgo: "2h",
+    engagement: { likes: 127, comments: 34, reposts: 8 },
+    websiteLink: "http://shalev.agency",
   },
   {
     id: "feed-2",
     author: {
-      name: "Boaz Rossano",
-      headline: "UX Expert for Explainable AI | Helping Startup Companies Gain ...",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+      name: "Sarah Chen",
+      headline: "Product Design Lead at Figma | Ex-Google",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
       isVerified: true,
       connectionDegree: "2nd",
     },
-    content: "יש לכם חברה ואתם צריכים מתמחים למחקר ועיצוב UI/UX?\nמעולה! יש לנו כאלה!!",
-    imageUrl: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=800&h=600&fit=crop",
-    timeAgo: "5d • Edited",
-    engagement: { likes: 234, comments: 45, reposts: 12 },
-    showTranslation: true,
+    content: "Design systems aren't about consistency.\n\nThey're about freeing your team to focus on the hard problems instead of reinventing buttons.\n\nThe best design system is the one your team actually uses.",
+    timeAgo: "4h",
+    engagement: { likes: 892, comments: 67, reposts: 45 },
     actionButton: "connect",
   },
   {
     id: "feed-3",
     author: {
-      name: "Adeo Ressi",
-      headline: "CEO at Decile Group, Chairman at Founder Institute, Funding...",
-      avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=face",
+      name: "Alex Rivera",
+      headline: "Founder & CEO at LaunchPad | Helping startups scale",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
       isVerified: true,
       connectionDegree: "2nd",
     },
-    content: "The last satisfying GP just retired.",
-    timeAgo: "1d",
-    engagement: { likes: 36, comments: 24, reposts: 1 },
-    isPromoted: true,
-    promotedBy: "Decile Group",
+    content: "Raised $2M for our startup.\n\nHere's what I learned:\n\n1. Your deck matters less than your story\n2. Warm intros are everything\n3. VCs talk to each other (a lot)\n4. No doesn't mean never\n5. The best investors add more than money\n\nKeep building.",
+    imageUrl: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=600&fit=crop",
+    timeAgo: "6h",
+    engagement: { likes: 2341, comments: 189, reposts: 124 },
     actionButton: "follow",
   },
   {
     id: "feed-4",
     author: {
-      name: "Amir Shneider",
-      headline: "CMO | Skywatch, VOOM & Toffu AI",
-      avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face",
-      isVerified: true,
-      connectionDegree: "1st",
+      name: "Maya Patel",
+      headline: "Senior UX Researcher at Microsoft | Speaker",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face",
+      isVerified: false,
+      connectionDegree: "3rd",
     },
-    content: "Design tokens are the foundation of scalable design systems.\n\nBut most teams implement them wrong.\n\nHere's the framework I use:\n\n1. Primitive tokens (raw values)\n2. Semantic tokens (purpose-driven)\n3. Component tokens (context-specific)",
-    timeAgo: "4h • Edited",
-    engagement: { likes: 345, comments: 56, reposts: 23 },
+    content: "Stop asking users what they want.\n\nStart watching what they do.\n\nThe gap between what people say and what they actually do is where all the insights hide.",
+    timeAgo: "8h",
+    engagement: { likes: 567, comments: 43, reposts: 28 },
+    actionButton: "connect",
+  },
+  {
+    id: "feed-5",
+    author: {
+      name: "David Kim",
+      headline: "Engineering Manager at Stripe | Building payments infrastructure",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+      isVerified: true,
+      connectionDegree: "2nd",
+    },
+    content: "The best code is the code you don't write.\n\nEvery line is a liability:\n- It can break\n- It needs testing\n- It needs documentation\n- Someone has to maintain it\n\nSimplicity wins.",
+    timeAgo: "1d",
+    engagement: { likes: 1205, comments: 98, reposts: 67 },
   },
 ];

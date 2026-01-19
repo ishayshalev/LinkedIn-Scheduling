@@ -36,7 +36,7 @@ export function PostEditor() {
           justifyContent: 'center',
           padding: '32px',
           backgroundColor: 'white',
-          borderLeft: '1px solid #e0e0e0',
+          borderLeft: 'none',
           color: '#666',
         }}
       >
@@ -61,7 +61,7 @@ export function PostEditor() {
           padding: '16px',
           overflow: 'auto',
           backgroundColor: 'white',
-          borderLeft: mode === 'scheduler' ? '1px solid #e0e0e0' : 'none',
+          borderLeft: 'none',
         }}
       >
         <PostPreview post={currentPost} />
@@ -78,7 +78,7 @@ export function PostEditor() {
         padding: '16px',
         overflow: 'auto',
         backgroundColor: 'white',
-        borderLeft: mode === 'scheduler' ? '1px solid #e0e0e0' : 'none',
+        borderLeft: 'none',
       }}
     >
       <PostTextArea />
