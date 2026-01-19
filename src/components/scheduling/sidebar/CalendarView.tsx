@@ -453,7 +453,7 @@ export function CalendarView({ posts }: CalendarViewProps) {
               No posts scheduled
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {selectedDatePosts.map((post) => (
                 <PostListItem
                   key={post.id}
