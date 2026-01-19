@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { usePosts } from '@/hooks/usePosts';
 import { PostTabs, type TabType } from './PostTabs';
 import { PostList } from './PostList';
+import { CalendarView } from './CalendarView';
+import { type ViewMode } from './ViewToggle';
 
 export function SchedulingSidebar() {
-  const [activeTab, setActiveTab] = useState<TabType>('drafts');
+  const [activeTab, setActiveTab] = useState<TabType>('scheduled');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const { scheduledPosts, drafts } = usePosts();
 
   const getPostsForTab = () => {
@@ -43,11 +46,20 @@ export function SchedulingSidebar() {
       `}</style>
 
       {/* Tabs */}
-      <PostTabs activeTab={activeTab} onTabChange={setActiveTab} />
+      <PostTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
+      />
 
-      {/* Post list */}
+      {/* Content */}
       <div className="sidebar-scroll" style={{ flex: 1, overflow: 'auto' }}>
-        <PostList posts={getPostsForTab()} activeTab={activeTab} />
+        {activeTab === 'scheduled' && viewMode === 'calendar' ? (
+          <CalendarView posts={scheduledPosts} />
+        ) : (
+          <PostList posts={getPostsForTab()} activeTab={activeTab} />
+        )}
       </div>
     </div>
   );

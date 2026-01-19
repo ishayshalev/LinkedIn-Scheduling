@@ -1,13 +1,16 @@
 import { usePosts } from '@/hooks/usePosts';
+import { ViewToggle, type ViewMode } from './ViewToggle';
 
 export type TabType = 'scheduled' | 'drafts';
 
 interface PostTabsProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
 }
 
-export function PostTabs({ activeTab, onTabChange }: PostTabsProps) {
+export function PostTabs({ activeTab, onTabChange, viewMode, onViewModeChange }: PostTabsProps) {
   const { scheduledPosts, drafts } = usePosts();
 
   const tabs: { id: TabType; label: string; count: number }[] = [
@@ -19,45 +22,54 @@ export function PostTabs({ activeTab, onTabChange }: PostTabsProps) {
     <div
       style={{
         display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
         borderBottom: '1px solid #e0e0e0',
+        paddingRight: '12px',
       }}
     >
-      {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => onTabChange(tab.id)}
-          style={{
-            flex: 1,
-            padding: '12px 16px',
-            fontSize: '14px',
-            fontWeight: activeTab === tab.id ? 600 : 400,
-            color: activeTab === tab.id ? '#0a66c2' : '#666',
-            background: 'none',
-            border: 'none',
-            borderBottom: activeTab === tab.id ? '2px solid #0a66c2' : '2px solid transparent',
-            cursor: 'pointer',
-            marginBottom: '-1px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '6px',
-          }}
-        >
-          {tab.label}
-          <span
+      <div style={{ display: 'flex' }}>
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => onTabChange(tab.id)}
             style={{
-              backgroundColor: activeTab === tab.id ? '#0a66c2' : '#e0e0e0',
-              color: activeTab === tab.id ? 'white' : '#666',
-              fontSize: '12px',
-              padding: '2px 6px',
-              borderRadius: '10px',
-              fontWeight: 500,
+              padding: '12px 16px',
+              fontSize: '14px',
+              fontWeight: activeTab === tab.id ? 600 : 400,
+              color: activeTab === tab.id ? '#0a66c2' : '#666',
+              background: 'none',
+              border: 'none',
+              borderBottom: activeTab === tab.id ? '2px solid #0a66c2' : '2px solid transparent',
+              cursor: 'pointer',
+              marginBottom: '-1px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
             }}
           >
-            {tab.count}
-          </span>
-        </button>
-      ))}
+            {tab.label}
+            <span
+              style={{
+                backgroundColor: activeTab === tab.id ? '#0a66c2' : '#e0e0e0',
+                color: activeTab === tab.id ? 'white' : '#666',
+                fontSize: '12px',
+                padding: '2px 6px',
+                borderRadius: '10px',
+                fontWeight: 500,
+              }}
+            >
+              {tab.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Only show view toggle for scheduled tab */}
+      {activeTab === 'scheduled' && (
+        <ViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
+      )}
     </div>
   );
 }
