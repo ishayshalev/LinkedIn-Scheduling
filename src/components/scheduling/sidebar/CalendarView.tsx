@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { type Post } from '@/data/posts';
 import { PostListItem } from './PostListItem';
 import { useSchedulingDialog } from '../SchedulingDialogContext';
@@ -6,6 +7,7 @@ import {
   format,
   isSameDay,
   isToday,
+  startOfDay,
   addDays,
   parseISO,
 } from 'date-fns';
@@ -16,13 +18,19 @@ interface CalendarViewProps {
 
 export function CalendarView({ posts }: CalendarViewProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [weekOffset, setWeekOffset] = useState(0); // 0 = current 2 weeks, 1 = next 2 weeks, etc.
   const { currentPostId } = useSchedulingDialog();
 
-  // Generate next 14 days starting from today
+  const today = useMemo(() => startOfDay(new Date()), []);
+
+  // Generate 14 days based on offset
   const days = useMemo(() => {
-    const today = new Date();
-    return Array.from({ length: 14 }, (_, i) => addDays(today, i));
-  }, []);
+    const startDate = addDays(today, weekOffset * 14);
+    return Array.from({ length: 14 }, (_, i) => addDays(startDate, i));
+  }, [today, weekOffset]);
+
+  // Can't go back before today
+  const canGoBack = weekOffset > 0;
 
   // Get posts grouped by date
   const postsByDate = useMemo(() => {
@@ -52,15 +60,104 @@ export function CalendarView({ posts }: CalendarViewProps) {
   const week1 = days.slice(0, 7);
   const week2 = days.slice(7, 14);
 
+  // Get date range label
+  const dateRangeLabel = useMemo(() => {
+    const start = days[0];
+    const end = days[13];
+    const startMonth = format(start, 'MMM');
+    const endMonth = format(end, 'MMM');
+    if (startMonth === endMonth) {
+      return `${format(start, 'MMM d')} - ${format(end, 'd')}`;
+    }
+    return `${format(start, 'MMM d')} - ${format(end, 'MMM d')}`;
+  }, [days]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* 2-Week Strip */}
       <div
         style={{
-          padding: '12px 12px 8px',
+          padding: '8px 12px',
           borderBottom: '1px solid #f0f0f0',
         }}
       >
+        {/* Navigation Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '8px',
+          }}
+        >
+          <button
+            onClick={() => canGoBack && setWeekOffset(weekOffset - 1)}
+            disabled={!canGoBack}
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              border: 'none',
+              background: 'none',
+              cursor: canGoBack ? 'pointer' : 'default',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: canGoBack ? '#666' : '#ddd',
+              transition: 'all 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              if (canGoBack) {
+                e.currentTarget.style.backgroundColor = '#f3f3f3';
+                e.currentTarget.style.color = '#000';
+              }
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = canGoBack ? '#666' : '#ddd';
+            }}
+          >
+            <ChevronLeft style={{ width: '18px', height: '18px' }} />
+          </button>
+
+          <span
+            style={{
+              fontSize: '13px',
+              fontWeight: 600,
+              color: '#191919',
+            }}
+          >
+            {dateRangeLabel}
+          </span>
+
+          <button
+            onClick={() => setWeekOffset(weekOffset + 1)}
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              border: 'none',
+              background: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#666',
+              transition: 'all 0.15s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#f3f3f3';
+              e.currentTarget.style.color = '#000';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#666';
+            }}
+          >
+            <ChevronRight style={{ width: '18px', height: '18px' }} />
+          </button>
+        </div>
+
         {/* Week 1 */}
         <div
           style={{
