@@ -15,20 +15,19 @@ interface DateGroupProps {
 
 export function DateGroup({ dateKey, posts, showDragHandles = true }: DateGroupProps) {
   const { currentPostId, setCurrentPostId, setDraftContent } = useSchedulingDialog();
-  const { createDraft, schedulePost } = usePosts();
+  const { createDraft } = usePosts();
   const date = new Date(dateKey);
 
   const handleAddNewPost = () => {
-    // Create a new draft
-    const newDraft = createDraft();
-
-    // Schedule it for this date at 10:00 AM
+    // Schedule for this date at 10:00 AM
     const scheduledDate = new Date(date);
     scheduledDate.setHours(10, 0, 0, 0);
-    schedulePost(newDraft.id, scheduledDate.toISOString());
+
+    // Create post directly as scheduled
+    const newPost = createDraft(scheduledDate.toISOString());
 
     // Select the new post for editing
-    setCurrentPostId(newDraft.id);
+    setCurrentPostId(newPost.id);
     setDraftContent('');
   };
 

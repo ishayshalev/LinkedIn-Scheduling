@@ -21,17 +21,17 @@ export function CalendarView({ posts }: CalendarViewProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [weekOffset, setWeekOffset] = useState(0); // 0 = current 2 weeks, 1 = next 2 weeks, etc.
   const { currentPostId, setCurrentPostId, setDraftContent } = useSchedulingDialog();
-  const { createDraft, schedulePost } = usePosts();
+  const { createDraft } = usePosts();
 
   const handleAddNewPost = () => {
-    const newDraft = createDraft();
-
     // Schedule for the selected date at 10:00 AM
     const scheduledDate = new Date(selectedDate);
     scheduledDate.setHours(10, 0, 0, 0);
-    schedulePost(newDraft.id, scheduledDate.toISOString());
 
-    setCurrentPostId(newDraft.id);
+    // Create post directly as scheduled
+    const newPost = createDraft(scheduledDate.toISOString());
+
+    setCurrentPostId(newPost.id);
     setDraftContent('');
   };
 

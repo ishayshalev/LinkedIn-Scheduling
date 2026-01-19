@@ -14,7 +14,7 @@ interface PostsContextType {
   setSelectedPostId: (id: string | null) => void;
   updatePost: (id: string, updates: Partial<Post>) => void;
   deletePost: (id: string) => void;
-  createDraft: () => Post;
+  createDraft: (scheduledFor?: string) => Post;
   schedulePost: (id: string, scheduledFor: string) => void;
   moveToDraft: (id: string) => void;
   swapPostTimes: (postId1: string, postId2: string) => void;
@@ -48,15 +48,23 @@ export function PostsProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const createDraft = (): Post => {
+  const createDraft = (scheduledFor?: string): Post => {
     const newPost: Post = {
-      id: `draft-${Date.now()}`,
+      id: `post-${Date.now()}`,
       content: '',
-      scheduledFor: null,
-      status: 'draft',
+      scheduledFor: scheduledFor || null,
+      status: scheduledFor ? 'scheduled' : 'draft',
       hasImage: false,
     };
-    setDrafts((posts) => [newPost, ...posts]);
+
+    if (scheduledFor) {
+      // Add directly to scheduled posts
+      setScheduledPosts((posts) => [...posts, newPost]);
+    } else {
+      // Add to drafts
+      setDrafts((posts) => [newPost, ...posts]);
+    }
+
     setSelectedPostId(newPost.id);
     return newPost;
   };
