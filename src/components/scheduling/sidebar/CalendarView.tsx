@@ -454,6 +454,7 @@ export function CalendarView({ posts }: CalendarViewProps) {
                 backgroundColor: '#fafafa',
                 borderRadius: '8px',
                 border: '1px dashed #e0e0e0',
+                marginBottom: '8px',
               }}
             >
               No posts scheduled
