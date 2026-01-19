@@ -168,7 +168,7 @@ export const feedPosts: FeedPost[] = [
       isVerified: false,
       connectionDegree: "1st",
     },
-    content: "Hot take: I'm probably the best design partner you'll ever have.\n\nI mean, I built this entire scheduling tool in a weekend just to prove a point.\n\nThe point? I have no idea. But it looks pretty good, right?\n\n(DMs are open if you want to argue about this)",
+    content: "Hot take: I'm probably the best design & development partner you'll ever have.\n\nI mean, I built this entire scheduling tool in a weekend just to prove a point.\n\nThe point? I have no idea. But it looks pretty good, right?\n\n(DMs are open if you want to argue about this)",
     timeAgo: "2h",
     engagement: { likes: 127, comments: 34, reposts: 8 },
     websiteLink: "http://shalev.agency",
