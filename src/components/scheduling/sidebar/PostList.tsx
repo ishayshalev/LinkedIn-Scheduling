@@ -7,7 +7,7 @@ import { useSchedulingDialog } from '../SchedulingDialogContext';
 import { usePosts } from '@/hooks/usePosts';
 import {
   DndContext,
-  closestCenter,
+  pointerWithin,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -109,7 +109,7 @@ export function PostList({ posts, activeTab }: PostListProps) {
     return (
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={pointerWithin}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
@@ -123,10 +123,13 @@ export function PostList({ posts, activeTab }: PostListProps) {
             />
           ))}
         </div>
-        <DragOverlay>
+        <DragOverlay dropAnimation={null}>
           {activePost ? (
             <div
               style={{
+                // ADJUST THESE to position card relative to cursor:
+                // translate(Xpx, Ypx) - positive = right/down
+                transform: 'translate(0px, 0px)',
                 padding: '12px',
                 backgroundColor: '#ffffff',
                 borderRadius: '8px',

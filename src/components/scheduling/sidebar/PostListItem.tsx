@@ -3,7 +3,6 @@ import { useSchedulingDialog } from '../SchedulingDialogContext';
 import { formatTime } from '@/lib/time-utils';
 import { Image, ArrowRightLeft } from 'lucide-react';
 import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 
 interface PostListItemProps {
   post: Post;
@@ -26,7 +25,6 @@ export function PostListItem({
     attributes,
     listeners,
     setNodeRef,
-    transform,
     transition,
     isDragging,
     isOver: isSortableOver,
@@ -38,10 +36,9 @@ export function PostListItem({
   // Use either the prop isOver or the sortable isOver
   const showSwapOverlay = (isOver || isSortableOver) && !isDragging;
 
+  // When using DragOverlay, don't transform the original - just show placeholder
   const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
     touchAction: 'none',
     userSelect: 'none',
     WebkitUserSelect: 'none',
@@ -65,11 +62,12 @@ export function PostListItem({
         ...style,
         position: 'relative',
         padding: '12px',
-        backgroundColor: showSwapOverlay ? '#fff3cd' : (isSelected ? '#e8f4fd' : '#ffffff'),
+        backgroundColor: isDragging ? '#f0f7ff' : (showSwapOverlay ? '#e8f4fd' : (isSelected ? '#e8f4fd' : '#ffffff')),
         borderRadius: '8px',
-        cursor: showDragHandle ? 'grab' : 'pointer',
-        border: showSwapOverlay ? '2px solid #ffc107' : (isSelected ? '1px solid #0a66c2' : '1px solid #e0e0e0'),
+        cursor: showDragHandle ? (isDragging ? 'grabbing' : 'grab') : 'pointer',
+        border: isDragging ? '2px dashed #0a66c2' : (showSwapOverlay ? '2px solid #0a66c2' : (isSelected ? '1px solid #0a66c2' : '1px solid #e0e0e0')),
         marginBottom: '8px',
+        opacity: isDragging ? 0.5 : 1,
       }}
       onClick={handleClick}
       {...(showDragHandle ? { ...attributes, ...listeners } : {})}
@@ -83,7 +81,7 @@ export function PostListItem({
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(255, 193, 7, 0.2)',
+            backgroundColor: 'rgba(10, 102, 194, 0.1)',
             borderRadius: '8px',
             display: 'flex',
             alignItems: 'center',
@@ -93,8 +91,8 @@ export function PostListItem({
         >
           <div
             style={{
-              backgroundColor: '#ffc107',
-              color: '#000',
+              backgroundColor: '#0a66c2',
+              color: '#fff',
               padding: '4px 12px',
               borderRadius: '4px',
               fontSize: '12px',
@@ -105,7 +103,7 @@ export function PostListItem({
             }}
           >
             <ArrowRightLeft style={{ width: '14px', height: '14px' }} />
-            Swap times?
+            Swap times
           </div>
         </div>
       )}
