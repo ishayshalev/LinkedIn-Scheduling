@@ -75,7 +75,7 @@ export function SchedulingDialog() {
           maxWidth: '1100px',
           width: '90vw',
           height: '80vh',
-          maxHeight: '700px',
+          maxHeight: '800px',
           padding: 0,
           overflow: 'hidden',
           display: 'flex',
